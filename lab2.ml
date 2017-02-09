@@ -27,7 +27,7 @@ Part 1: Currying and uncurrying
 Exercise 1: In this exercise, you'll define higher-order functions
 curry and uncurry for currying and uncurrying binary functions
 (functions of two arguments). The functions are named after
-mathematician Haskell Curry '1916. (By way of reminder, a curried
+mathematician Haskell Curry '1920. (By way of reminder, a curried
 function takes its arguments one at a time. An uncurried function
 takes them all at once in a tuple.)
 
@@ -140,10 +140,15 @@ Part 3: Polymorphism practice
 Exercise 7: Do you see a pattern in your implementations of min_option
 and max_option? How can we factor out similar code?  
 
-Write a higher-order function for binary operations on options.  If
-both arguments are None, return None.  If one argument is (Some x) and
-the other argument is None, function should return (Some x).  What is
-calc_option's function signature?
+Write a higher-order function for binary operations on options taking
+three arguments in order: the binary operation (a curried function)
+and its first and second argument. If both arguments are None, return
+None.  If one argument is (Some x) and the other argument is None,
+function should return (Some x). If neither argument is none, the
+binary operation should be applied to the argument values and the
+result appropriately returned. 
+
+What is calc_option's function signature? Implement calc_option.
 ......................................................................*)
 
 let calc_option =
@@ -151,7 +156,7 @@ let calc_option =
      
 (*......................................................................
 Exercise 8: Now rewrite min_option and max_option using the higher-order
-function. Call them min_option_2 and max_option_2.
+function calc_option. Call them min_option_2 and max_option_2.
 ......................................................................*)
   
 let min_option_2 =
@@ -174,7 +179,7 @@ let and_option =
 (*......................................................................
 Exercise 10: In Lab 1, you implemented a function zip that takes two
 lists and "zips" them together into a list of pairs. Here's a possible
-implementation of zip (here renamed zip_exn to distinguish to
+implementation of zip (here renamed zip_exn to distinguish it
 from the zip you'll implement below, which has a different signature):
 
 let rec zip_exn (x : int list) (y : int list) : (int * int) list =
@@ -273,7 +278,7 @@ A college wants to store student records in a simple database,
 implemented as a list of individual course enrollments. The
 enrollments themselves are implemented as a record type, called
 "enrollment", with string fields labeled "name" and "course" and an
-integer id number labeled "id". An appropriate type might be:
+integer student id number labeled "id". An appropriate type might be:
 *)
 
 type enrollment = { name : string;
