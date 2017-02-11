@@ -81,8 +81,8 @@ Now reimplement prods using map and your uncurried times function. Why
 do you need the uncurried times function?
 ......................................................................*)
 
-let prods =
-  fun _ -> failwith "prods not implemented" ;; 
+let prods (lst : (int * int) list) : int list =
+    map times lst;; 
 
 (*======================================================================
 Part 2: Option types
@@ -96,7 +96,7 @@ let rec max_list (lst : int list) : int =
   | [elt] -> elt
   | head :: tail -> let max_tail = max_list tail in
       if head > max_tail then head else max_tail ;;
-
+  
 As written, this function generates a warning that the match is not
 exhaustive. Why? What's an example of the missing case? Try entering
 the function in ocaml and see what information you can glean from the
@@ -113,8 +113,18 @@ Reimplement max_list, but this time, it should return an int option
 instead of an int.
 ......................................................................*)
 
-let max_list (lst: int list) : int option =
-  failwith "max_list not implemented" ;;
+let rec max_list (lst: int list) : int option =
+    match lst with
+    |    [] -> None
+    |    [x] -> Some x  
+    |    hd::tl -> let max_tail = max_list tl in
+                   match max_tail with
+                   |    Some max_tail_compare ->
+                            if hd > max_tail_compare then 
+                                Some hd 
+                            else 
+                                 Some max_tail_compare
+                   |    None -> failwith "Should not reach here.";;
   
 (*......................................................................
 Exercise 5: Write a function to return the smaller of two int options,
@@ -124,7 +134,11 @@ useful.
 ......................................................................*)
 
 let min_option (x: int option) (y: int option) : int option =
-  failwith "min_option not implemented" ;;
+    match x, y with
+    |    None, None -> None
+    |    Some a, None -> x
+    |    None, Some b -> y
+    |    Some a, Some b -> if a < b then x else y;;
      
 (*......................................................................
 Exercise 6: Write a function to return the larger of two int options, or
@@ -133,7 +147,11 @@ other.
 ......................................................................*)
 
 let max_option (x: int option) (y: int option) : int option =
-  failwith "max_option not implemented" ;;
+    match x, y with
+    |    None, None -> None
+    |    Some a, None -> x
+    |    None, Some b -> y
+    |    Some a, Some b -> if a > b then x else y;;  
 
 (*======================================================================
 Part 3: Polymorphism practice
