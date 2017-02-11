@@ -44,9 +44,12 @@ To think about before you start coding:
 Now implement the two functions curry and uncurry.
 ......................................................................*)
 
-let curry = fun _ -> failwith "curry not implemented" ;;
+let curry (uncurried_func : ('a * 'b) -> 'c) : ('a -> 'b -> 'c) =
+    fun x -> (fun y -> uncurried_func(x, y));;     
+
      
-let uncurry = fun _ -> failwith "uncurry not implemented" ;;
+let uncurry (curried_func : 'a -> 'b -> 'c) : ('a * 'b) -> 'c =
+    fun (x, y) -> curried_func x y;;
 
 (*......................................................................
 Exercise 2: OCaml's built in binary operators, like (+) and ( * ) are
@@ -61,11 +64,10 @@ Using your uncurry function, define uncurried plus and times
 functions.
 ......................................................................*)
 
-let plus =
-  fun _ -> failwith "plus not implemented"
+let plus = uncurry ( + );;
      
-let times =
-  fun _ -> failwith "times not implemented" ;;
+let times = uncurry ( * );;
+  
   
 (*......................................................................
 Exercise 3: Recall the prods function from Lab 1:
