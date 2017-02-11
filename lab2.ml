@@ -19,6 +19,7 @@ exercises in this order:
 
 and complete the remaining ones at your leisure.
  *)
+ open List;;
 
 (*======================================================================
 Part 1: Currying and uncurrying
@@ -171,19 +172,27 @@ result appropriately returned.
 What is calc_option's function signature? Implement calc_option.
 ......................................................................*)
 
-let calc_option =
-  fun _ -> failwith "calc_option not implementedd" ;;
+let calc_option (the_func : 'a -> 'a -> 'a option)
+                (first : 'a option)
+                (second : 'a option)
+                : 'a option =
+  match first, second with
+  |    None, Some x -> second
+  |    Some y, None -> first
+  |    None, None -> None
+  |    Some x, Some y -> the_func x y;;   
      
 (*......................................................................
 Exercise 8: Now rewrite min_option and max_option using the higher-order
 function calc_option. Call them min_option_2 and max_option_2.
 ......................................................................*)
   
-let min_option_2 =
-  fun _ -> failwith "min_option_2 not implemented" ;;
+let min_option_2 (x : int option) (y : int option) : int option =
+    calc_option (fun a b -> if a < b then Some a else Some b) x y;;  
+
      
-let max_option_2 =
-  fun _ -> failwith "max_option_2 not implemented" ;;
+let max_option_2 (x : int option) (y : int option) : int option =
+    calc_option (fun a b -> if a > b then Some a else Some b) x y;;
 
 (*......................................................................
 Exercise 9: Now that we have calc_option, we can use it in other
@@ -193,8 +202,8 @@ AND of two bool options, or None if both are None. If exactly one is
 None, return the other.
 ......................................................................*)
   
-let and_option =
-  fun _ -> failwith "and_option not implemented" ;;
+let and_option (x : bool option) (y : bool option) : bool option =
+    calc_option (fun a b -> Some (a && b)) x y;; 
   
 (*......................................................................
 Exercise 10: In Lab 1, you implemented a function zip that takes two
@@ -212,8 +221,10 @@ solution to operate polymorphically on lists of any type. What is the
 type of the result?
 ......................................................................*)
 
-let zip_exn =
-  fun _ -> failwith "zip_exn not implemented" ;;
+let rec zip_exn (x : 'a list) (y : 'a list) : ('a * 'a) list = 
+    match x, y with
+    |    [], [] -> []
+    |    hdx::tlx, hdy::tly -> (hdx, hdy) :: zip_exn tlx tly;;     
 
 (*......................................................................
 Exercise 11: Another problem with the implementation of zip_exn is that,
@@ -224,9 +235,8 @@ generate an alternate solution without this property?
 Do so below in a new definition of zip.
 ......................................................................*)
 
-let zip =
-  fun _ -> failwith "zip not implemented" ;;
-
+let rec zip (x : 'a list) (y : 'a list) : ('a * 'a) list option =
+    if length x = length y then Some (zip_exn x y) else None;; 
 (*====================================================================
 Part 4: Factoring out None-handling
 
@@ -258,7 +268,9 @@ adjusted for the result type. Implement the maybe function.
 ......................................................................*)
   
 let maybe (x: 'a option) (f: 'a -> 'b) : 'b option =
-  failwith "maybe not implemented" ;; 
+    match x with
+    |    None -> None
+    |    Some v -> Some (f v);; 
 
 (*......................................................................
 Exercise 13: Now reimplement dotprod to use the maybe function. (The
@@ -272,7 +284,7 @@ let sum : int list -> int =
   List.fold_left (+) 0 ;;
 
 let dotprod (a : int list) (b : int list) : int option =
-  failwith "dot_prod not implemented" ;; 
+     maybe (zip a b) (fun x -> sum (prods x));;   
 
 (*......................................................................
 Exercise 14: Reimplement zip along the same lines, in zip_2 below. 
@@ -280,7 +292,7 @@ Exercise 14: Reimplement zip along the same lines, in zip_2 below.
 
 let rec zip_2 (x : int list) (y : int list)
         : ((int * int) list) option =
-  failwith "zip_2 not implemented" ;;
+    
 
 (*......................................................................
 Exercise 15: For the energetic, reimplement max_list along the same
