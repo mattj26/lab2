@@ -172,7 +172,7 @@ What is calc_option's function signature? Implement calc_option.
 ......................................................................*)
 
 let calc_option =
-  fun _ -> failwith "calc_option not implemented" ;;
+  fun _ -> failwith "calc_option not implementedd" ;;
      
 (*......................................................................
 Exercise 8: Now rewrite min_option and max_option using the higher-order
