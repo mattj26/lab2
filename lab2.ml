@@ -292,6 +292,13 @@ Exercise 14: Reimplement zip along the same lines, in zip_2 below.
 
 let rec zip_2 (x : int list) (y : int list)
         : ((int * int) list) option =
+  match x, y with
+  |    [], [] -> Some []
+  |    _::_, [] -> None
+  |    [], _::_ -> None
+  |    hdx::tlx, hdy::tly -> let tail_option = zip_2 tlx tly in
+                             maybe tail_option 
+                             (fun x -> (hdx, hdy)::x);;   
     
 
 (*......................................................................
@@ -301,7 +308,12 @@ function always passes along the None.
 ......................................................................*)
 
 let rec max_list (lst : int list) : int option =
-  failwith "max_list not implemented" ;; 
+    match lst with
+    |    [] -> None
+    |    [y] -> Some y
+    |    hd::tl -> let max_tail = max_list tl in
+                   maybe max_tail
+                   (fun x -> if x > hd then x else hd);; 
 
 (*======================================================================
 Part 5: Record types
@@ -348,8 +360,8 @@ For example:
 
 let transcript (enrollments: enrollment list)
                (student: int)
-             : enrollment list =
-  failwith "transcript not implemented" ;;
+             : enrollment list = 
+  filter (fun x -> x.id = student) enrollments;;
   
 (*......................................................................
 Exercise 17: Define a function called ids that takes an enrollment list
@@ -363,7 +375,7 @@ For example:
 ......................................................................*)
 
 let ids (enrollments: enrollment list) : int list =
-  failwith "ids not implemented" ;;
+    sort_uniq (fun x y -> x - y) (map (fun z -> z.id) enrollments);;
   
 (*......................................................................
 Exercise 18: Define a function called verify that determines whether all
@@ -376,4 +388,5 @@ For example:
 ......................................................................*)
 
 let verify (enrollments: enrollment list) : bool =
-  failwith "verify not implemented" ;;
+     
+
