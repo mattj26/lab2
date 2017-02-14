@@ -388,5 +388,12 @@ For example:
 ......................................................................*)
 
 let verify (enrollments: enrollment list) : bool =
+    let uniq_ids = ids enrollments in
+    let enrollment_by_id = map (fun a -> transcript enrollments a) uniq_ids in
+    let enrollment_by_id_unique = map (sort_uniq 
+        (fun x y -> if x.name = y.name then 0 else 1)) enrollment_by_id in
+    fold_right ( && ) (map (fun z -> length z = 1) enrollment_by_id_unique) 
+        true;; 
+
      
 
