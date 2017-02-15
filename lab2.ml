@@ -137,8 +137,8 @@ useful.
 let min_option (x: int option) (y: int option) : int option =
     match x, y with
     |    None, None -> None
-    |    Some a, None -> x
-    |    None, Some b -> y
+    |    Some _, None -> x
+    |    None, Some _ -> y
     |    Some a, Some b -> if a < b then x else y;;
      
 (*......................................................................
@@ -150,8 +150,8 @@ other.
 let max_option (x: int option) (y: int option) : int option =
     match x, y with
     |    None, None -> None
-    |    Some a, None -> x
-    |    None, Some b -> y
+    |    Some _, None -> x
+    |    None, Some _ -> y
     |    Some a, Some b -> if a > b then x else y;;  
 
 (*======================================================================
@@ -177,8 +177,8 @@ let calc_option (the_func : 'a -> 'a -> 'a option)
                 (second : 'a option)
                 : 'a option =
   match first, second with
-  |    None, Some x -> second
-  |    Some y, None -> first
+  |    None, Some _ -> second
+  |    Some _, None -> first
   |    None, None -> None
   |    Some x, Some y -> the_func x y;;   
      
@@ -235,7 +235,7 @@ generate an alternate solution without this property?
 Do so below in a new definition of zip.
 ......................................................................*)
 
-let rec zip (x : 'a list) (y : 'a list) : ('a * 'a) list option =
+let zip (x : 'a list) (y : 'a list) : ('a * 'a) list option =
     if length x = length y then Some (zip_exn x y) else None;; 
 (*====================================================================
 Part 4: Factoring out None-handling
